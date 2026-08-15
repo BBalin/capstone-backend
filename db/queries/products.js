@@ -16,9 +16,21 @@ export async function createProducts(name, price, description, image_url) {
 
 export async function getAllProducts() {
   const sql = `
-        SELECT * 
+        SELECT *
         FROM products
     `;
   const { rows: products } = await db.query(sql);
   return products;
+}
+
+export async function getProductById(id) {
+  const sql = `
+        SELECT *
+        FROM products
+        WHERE id = $1
+    `;
+  const {
+    rows: [product],
+  } = await db.query(sql, [id]);
+  return product;
 }

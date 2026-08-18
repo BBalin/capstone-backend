@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS cart_items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS users;
 
@@ -26,8 +27,8 @@ CREATE TABLE products (
 CREATE TABLE cart (
   id serial PRIMARY KEY,
   user_id integer REFERENCES users(id) ON DELETE CASCADE,
-  created timestamp,
-  updated timestamp
+  created timestamp now(),
+  updated timestamp now()
 );
 
 CREATE TABLE orders (
@@ -35,7 +36,7 @@ CREATE TABLE orders (
   user_id integer REFERENCES users(id) ON DELETE CASCADE,
   status text NOT NULL,
   total decimal NOT NULL, 
-  created_at date NOT NULL
+  created_at date NOT NULL now()
 );
 
 CREATE TABLE cart_items (
@@ -51,4 +52,11 @@ CREATE TABLE order_items (
   product_id integer REFERENCES products(id) ON DELETE CASCADE,
   quantity integer NOT NULL,
   total decimal NOT NULL
+);
+
+CREATE TABLE messages (
+  id serial PRIMARY KEY,
+  user_id integer REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  message text NOT NULL,
+  created_at timestamp NOT NULL DEFAULT now()
 );

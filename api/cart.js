@@ -7,10 +7,18 @@ import {
   getCartItem,
   addCartItem,
   updateCartItemQuantity,
+  removeCartItem,
+  getCartItemsByUserId,
+  getCartItemWithOwner,
 } from "#db/queries/cart";
 
 const router = express.Router();
 export default router;
+
+router.get("/", requireUser, async (req, res) => {
+  const items = await getCartItemsByUserId(req.user.id);
+  res.send(items);
+});
 
 router.post(
   "/",
@@ -38,3 +46,39 @@ router.post(
     res.status(201).send(item);
   },
 );
+
+router.patch(
+  "/items/:id",
+  requireUser,
+  requireBody(["quantity"]),
+  async (req, res) => {
+    const { quantity } = req.body;
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return res.status(400).send("Quantity must be a positive whole number.");
+    }
+
+    const existingItem = await getCartItemWithOwner(req.params.id);
+    if (!existingItem) {
+      return res.status(404).send("Cart item not found.");
+    }
+    if (existingItem.user_id !== req.user.id) {
+      return res.status(403).send("That item isn't in your cart.");
+    }
+
+    const item = await updateCartItemQuantity(req.params.id, quantity);
+    res.send(item);
+  },
+);
+
+router.delete("/items/:id", requireUser, async (req, res) => {
+  const existingItem = await getCartItemWithOwner(req.params.id);
+  if (!existingItem) {
+    return res.status(404).send("Cart item not found.");
+  }
+  if (existingItem.user_id !== req.user.id) {
+    return res.status(403).send("That item isn't in your cart.");
+  }
+  const item = await removeCartItem(req.params.id);
+  res.send(item);
+});

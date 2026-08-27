@@ -27,16 +27,16 @@ CREATE TABLE products (
 CREATE TABLE cart (
   id serial PRIMARY KEY,
   user_id integer REFERENCES users(id) ON DELETE CASCADE,
-  created timestamp now(),
-  updated timestamp now()
+  created timestamp DEFAULT now(),
+  updated timestamp DEFAULT now()
 );
 
 CREATE TABLE orders (
   id serial PRIMARY KEY, 
   user_id integer REFERENCES users(id) ON DELETE CASCADE,
   status text NOT NULL,
-  total decimal NOT NULL, 
-  created_at date NOT NULL now()
+  total decimal NOT NULL,
+  created_at date NOT NULL DEFAULT now()
 );
 
 CREATE TABLE cart_items (

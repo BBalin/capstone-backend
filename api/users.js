@@ -4,6 +4,7 @@ export default router;
 
 import { createUser, getUserByUsernameAndPassword } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
+import requireUser from "#middleware/requireUser";
 import { createToken } from "#utils/jwt";
 
 router
@@ -35,3 +36,8 @@ router
     const token = await createToken({ id: user.id });
     res.send(token);
   });
+
+router.get("/profile", requireUser, (req, res) => {
+  const { password, ...safeUser } = req.user;
+  res.send(safeUser);
+});

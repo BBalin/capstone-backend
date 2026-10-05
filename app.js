@@ -11,7 +11,11 @@ import handlePostgresErrors from "#middleware/handlePostgresErrors";
 import cors from "cors";
 import morgan from "morgan";
 
-app.use(cors({ origin: process.env.CORS_ORIGIN ?? /localhost/ }));
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : [/localhost/];
+
+app.use(cors({ origin: allowedOrigins }));
 
 app.use(morgan("dev"));
 

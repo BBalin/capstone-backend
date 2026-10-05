@@ -1,5 +1,5 @@
 {
-  "name": "capstone",
+  "name": "3-hearts-kitchen-backend",
   "type": "module",
   "imports": {
     "#*": "./*.js"

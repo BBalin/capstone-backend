@@ -8,12 +8,11 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   id serial PRIMARY KEY,
-  username text NOT NULL,
+  username text NOT NULL UNIQUE,
   password text NOT NULL,
   first_name text NOT NULL,
   last_name text NOT NULL,
-  email text NOT NULL,
-  UNIQUE (username, email)
+  email text NOT NULL UNIQUE
 );
 
 CREATE TABLE products (

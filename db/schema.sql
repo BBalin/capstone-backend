@@ -32,10 +32,10 @@ CREATE TABLE cart (
 
 CREATE TABLE orders (
   id serial PRIMARY KEY, 
-  user_id integer REFERENCES users(id) ON DELETE CASCADE,
-  status text NOT NULL,
+  user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status text NOT NULL DEFAULT 'placed',
   total decimal NOT NULL,
-  created_at date NOT NULL DEFAULT now()
+  created_at timestamp NOT NULL DEFAULT now()
 );
 
 CREATE TABLE cart_items (
@@ -47,10 +47,10 @@ CREATE TABLE cart_items (
 
 CREATE TABLE order_items (
   id serial PRIMARY KEY,
-  order_id integer REFERENCES orders(id) ON DELETE CASCADE,
-  product_id integer REFERENCES products(id) ON DELETE CASCADE,
-  quantity integer NOT NULL,
-  total decimal NOT NULL
+  order_id integer NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id integer NOT NULL REFERENCES products(id),
+  quantity integer NOT NULL CHECK (quantity > 0),
+  price decimal NOT NULL
 );
 
 CREATE TABLE messages (
